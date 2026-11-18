@@ -1,0 +1,21 @@
+﻿# Build
+build/
+out/
+
+# Gradle
+.gradle/
+
+# NeoForge run directories
+run/
+runs/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
