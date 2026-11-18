@@ -1,0 +1,60 @@
+{
+  "categories": [
+    {
+      "id": "dresseur",
+      "label": "Dresseur & Poke Balls",
+      "icon": "cobblemon:poke_ball",
+      "color": "#CC3333",
+      "items": [
+        { "id": "poke_ball",   "item": "cobblemon:poke_ball",   "name": "Poke Ball",    "desc": "Ball standard (taux x1.0).",          "buy": 40  },
+        { "id": "great_ball",  "item": "cobblemon:great_ball",  "name": "Super Ball",   "desc": "Taux de capture ameliore (x1.5).",    "buy": 120,   "sell": 30  },
+        { "id": "ultra_ball",  "item": "cobblemon:ultra_ball",  "name": "Hyper Ball",   "desc": "Haute performance (x2.0).",           "buy": 300,   "sell": 75  },
+        { "id": "master_ball", "item": "cobblemon:master_ball", "name": "Master Ball",  "desc": "Capture infaillible. Usage unique.",  "buy": 15000, "sell": 0   },
+        { "id": "oran_berry",  "item": "cobblemon:oran_berry",  "name": "Baie Oran",    "desc": "Restaure 10 PV au porteur.",          "buy": 15,    "sell": 4   },
+        { "id": "fire_stone",  "item": "cobblemon:fire_stone",  "name": "Pierre Feu",   "desc": "Evolue Pokemon de type Feu.",         "buy": 450,   "sell": 110 },
+        { "id": "water_stone", "item": "cobblemon:water_stone", "name": "Pierre Eau",   "desc": "Evolue Pokemon de type Eau.",         "buy": 450,   "sell": 110 },
+        { "id": "rare_candy",  "item": "cobblemon:rare_candy",  "name": "Super Bonbon", "desc": "+1 niveau immediat.",                 "buy": 800,   "sell": 0   }
+      ]
+    },
+    {
+      "id": "ingenieur",
+      "label": "Ingenieur & Mecanique",
+      "icon": "create:cogwheel",
+      "color": "#DDAA00",
+      "items": [
+        { "id": "cogwheel",       "item": "create:cogwheel",       "name": "Roue Dentee",           "desc": "Transmet la rotation.",         "buy": 20,  "sell": 5  },
+        { "id": "large_cogwheel", "item": "create:large_cogwheel", "name": "Grande Roue Dentee",    "desc": "Double ou divise le RPM.",      "buy": 45,  "sell": 12 },
+        { "id": "shaft",          "item": "create:shaft",          "name": "Arbre de Transmission", "desc": "Axe mecanique de base.",        "buy": 10,  "sell": 2  },
+        { "id": "andesite_alloy", "item": "create:andesite_alloy", "name": "Alliage d'Andesite",    "desc": "Materiau fondamental Create.",  "buy": 35,  "sell": 10 },
+        { "id": "brass_ingot",    "item": "create:brass_ingot",    "name": "Lingot de Laiton",      "desc": "Alliage pour logistique.",      "buy": 90,  "sell": 30 },
+        { "id": "iron_sheet",     "item": "create:iron_sheet",     "name": "Plaque de Fer",         "desc": "Composant de base Create.",     "buy": 30,  "sell": 8  },
+        { "id": "brass_casing",   "item": "create:brass_casing",   "name": "Chassis en Laiton",     "desc": "Structure avancee.",            "buy": 140, "sell": 0  },
+        { "id": "wrench",         "item": "create:wrench",         "name": "Cle a Molette",         "desc": "Fait pivoter / demonte.",       "buy": 150, "sell": 0  }
+      ]
+    },
+    {
+      "id": "ressources",
+      "label": "Ressources & Minerais",
+      "icon": "minecraft:grass_block",
+      "color": "#3399CC",
+      "items": [
+        { "id": "cobblestone", "item": "minecraft:cobblestone", "name": "Pierre Taillee x16", "desc": "Bloc de construction.", "buy": 16, "sell": 4,  "count": 16 },
+        { "id": "oak_log",     "item": "minecraft:oak_log",     "name": "Buche de Chene x8",  "desc": "Bois pour engrenages.", "buy": 24, "sell": 6,  "count": 8  },
+        { "id": "iron_ingot",  "item": "minecraft:iron_ingot",  "name": "Lingot de Fer",      "desc": "Metal de base.",        "buy": 50, "sell": 18             },
+        { "id": "redstone",    "item": "minecraft:redstone",    "name": "Poudre de Redstone", "desc": "Circuits.",             "buy": 30, "sell": 10             },
+        { "id": "grass_block", "item": "minecraft:grass_block", "name": "Bloc d'Herbe",       "desc": "Fait apparaitre des Pokemon.", "buy": 40, "sell": 0  }
+      ]
+    },
+    {
+      "id": "deco",
+      "label": "Logistique & Deco",
+      "icon": "minecraft:barrel",
+      "color": "#9933CC",
+      "items": [
+        { "id": "barrel",  "item": "minecraft:barrel",  "name": "Tonneau",          "desc": "Compatible entonnoirs.", "buy": 25, "sell": 6  },
+        { "id": "piston",  "item": "minecraft:piston",  "name": "Piston Mecanique", "desc": "Systemes redstone.",     "buy": 85, "sell": 20 },
+        { "id": "lantern", "item": "minecraft:lantern", "name": "Lanterne",         "desc": "Eclaire, bloque monstres.", "buy": 35, "sell": 8 }
+      ]
+    }
+  ]
+}
