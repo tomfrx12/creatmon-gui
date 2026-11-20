@@ -33,8 +33,15 @@ runs {
     create("server") {}
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation("net.neoforged:neoforge:${neo_version}")
+    // Cobblemon - compile-only (présent dans le modpack au runtime)
+    compileOnly(files("/mnt/c/Users/natto/curseforge/minecraft/Instances/create x neoforge/mods/Cobblemon-neoforge-1.8.4+1.21.1.jar"))
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
 }
 
 tasks.withType<ProcessResources>().configureEach {

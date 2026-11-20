@@ -8,14 +8,14 @@ license = "MIT"
     displayName = "${mod_name}"
     description = "Custom shop GUI for Creatmon modpack"
 
-[[dependencies.creatmon_shop]]
+[[dependencies.creatmon_gui]]
     modId = "neoforge"
     type = "required"
     versionRange = "${neo_version_range}"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.creatmon_shop]]
+[[dependencies.creatmon_gui]]
     modId = "minecraft"
     type = "required"
     versionRange = "${minecraft_version_range}"
