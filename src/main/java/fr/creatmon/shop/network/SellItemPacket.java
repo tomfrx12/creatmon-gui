@@ -9,18 +9,22 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SellItemPacket(String itemId) implements CustomPacketPayload {
+public record SellItemPacket(String itemId, int quantity) implements CustomPacketPayload {
 
     public static final Type<SellItemPacket> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath("creatmon_shop", "sell_item"));
+            new Type<>(ResourceLocation.fromNamespaceAndPath("creatmon_gui", "sell_item"));
 
     public static final StreamCodec<FriendlyByteBuf, SellItemPacket> CODEC =
-            StreamCodec.composite(ByteBufCodecs.STRING_UTF8, SellItemPacket::itemId, SellItemPacket::new);
+            StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8, SellItemPacket::itemId,
+                ByteBufCodecs.VAR_INT,     SellItemPacket::quantity,
+                SellItemPacket::new);
 
     @Override
     public Type<? extends CustomPacketPayload> type() { return TYPE; }
@@ -35,35 +39,53 @@ public record SellItemPacket(String itemId) implements CustomPacketPayload {
                 return;
             }
 
-            // Find item in player inventory
             var loc  = ResourceLocation.tryParse(shopItem.itemId());
             var item = loc != null ? BuiltInRegistries.ITEM.get(loc) : null;
             if (item == null) return;
 
             var inventory = player.getInventory();
-            int slot = inventory.findSlotMatchingItem(new ItemStack(item));
-            if (slot == -1) {
+
+            // Count how many the player has across all slots
+            int available = 0;
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                ItemStack s = inventory.getItem(i);
+                if (!s.isEmpty() && s.getItem() == item) available += s.getCount();
+            }
+
+            int actualQty = Math.min(Math.max(1, packet.quantity()), available);
+            if (actualQty == 0) {
                 player.playNotifySound(SoundEvents.VILLAGER_NO, SoundSource.PLAYERS, 0.6f, 1.0f);
-                player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§cVous n'avez pas §f" + shopItem.name() + "§c dans votre inventaire."));
+                player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                    "§cVous n'avez pas §f" + shopItem.name() + "§c dans votre inventaire."));
                 return;
             }
 
-            // Remove 1 item
-            inventory.getItem(slot).shrink(1);
+            // Remove items across slots
+            int toRemove = actualQty;
+            for (int i = 0; i < inventory.getContainerSize() && toRemove > 0; i++) {
+                ItemStack s = inventory.getItem(i);
+                if (!s.isEmpty() && s.getItem() == item) {
+                    int r = Math.min(s.getCount(), toRemove);
+                    s.shrink(r);
+                    toRemove -= r;
+                }
+            }
 
-            // Add sell price to balance
+            int revenue    = shopItem.sell() * actualQty;
             int balance    = player.getPersistentData().getInt("cinet_balance");
-            int newBalance = balance + shopItem.sell();
+            int newBalance = balance + revenue;
             player.getPersistentData().putInt("cinet_balance", newBalance);
 
             if (player.containerMenu instanceof ShopMenu shopMenu) {
                 shopMenu.updateBalance(newBalance);
                 shopMenu.broadcastChanges();
             }
+            BalanceUtils.sendSync(player);
 
             player.playNotifySound(SoundEvents.VILLAGER_TRADE, SoundSource.PLAYERS, 0.6f, 1.0f);
             player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                "§aVente : §f" + shopItem.name() + " §7(§e+" + shopItem.sell() + " €§7) → solde : §e" + newBalance + " €"
+                "§aVente ×" + actualQty + " : §f" + shopItem.name() +
+                " §7(§e+" + revenue + " €§7) → solde : §e" + newBalance + " €"
             ));
         });
     }

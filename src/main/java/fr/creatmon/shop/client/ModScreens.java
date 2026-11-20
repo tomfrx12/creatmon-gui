@@ -12,6 +12,7 @@ public class ModScreens {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(ModMenus.SHOP_MENU.get(), ShopScreen::new);
+        event.register(ModMenus.SHOP_MENU.get(),    ShopScreen::new);
+        event.register(ModMenus.AUCTION_MENU.get(), AuctionScreen::new);
     }
 }

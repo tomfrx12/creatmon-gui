@@ -15,6 +15,9 @@ public class ModMenus {
     public static final DeferredHolder<MenuType<?>, MenuType<ShopMenu>> SHOP_MENU =
             MENU_TYPES.register("shop", () -> IMenuTypeExtension.create(ShopMenu::new));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<fr.creatmon.shop.auction.AuctionMenu>> AUCTION_MENU =
+            MENU_TYPES.register("auction", () -> IMenuTypeExtension.create(fr.creatmon.shop.auction.AuctionMenu::new));
+
     static void register(IEventBus bus) {
         MENU_TYPES.register(bus);
     }

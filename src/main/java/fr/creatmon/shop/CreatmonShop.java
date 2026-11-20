@@ -7,7 +7,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 @Mod(CreatmonShop.MOD_ID)
 public class CreatmonShop {
 
-    public static final String MOD_ID = "creatmon_shop";
+    public static final String MOD_ID = "creatmon_gui";
 
     public CreatmonShop(IEventBus modEventBus) {
         ModMenus.register(modEventBus);

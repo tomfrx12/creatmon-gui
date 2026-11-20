@@ -18,6 +18,7 @@ public class ShopOpener {
             player.getPersistentData().putInt(BALANCE_KEY, STARTING_BALANCE);
         }
         int balance = player.getPersistentData().getInt(BALANCE_KEY);
+        fr.creatmon.shop.network.BalanceUtils.sendSync(player);
         player.openMenu(
             new SimpleMenuProvider(
                 (id, inv, p) -> new ShopMenu(id, inv, balance),

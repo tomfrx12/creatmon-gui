@@ -13,8 +13,8 @@ import java.util.*;
 
 public class ShopData {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("creatmon_shop");
-    static final String CONFIG_FILE = "creatmon_shop.json";
+    private static final Logger LOGGER = LoggerFactory.getLogger("creatmon_gui");
+    static final String CONFIG_FILE = "creatmon_gui.json";
 
     public record ShopItem(String id, String itemId, String name, String desc, int buy, int sell, int count) {
         public boolean buyable()  { return buy  > 0; }
@@ -90,7 +90,7 @@ public class ShopData {
     private static void copyDefaultConfig(Path dest) {
         try {
             Files.createDirectories(dest.getParent());
-            try (InputStream is = ShopData.class.getResourceAsStream("/data/creatmon_shop/default_config.json")) {
+            try (InputStream is = ShopData.class.getResourceAsStream("/data/creatmon_gui/default_config.json")) {
                 if (is != null) {
                     Files.copy(is, dest);
                     LOGGER.info("[CreatmonShop] Config par défaut créée : {}", dest);
