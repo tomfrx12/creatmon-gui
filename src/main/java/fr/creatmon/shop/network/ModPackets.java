@@ -12,7 +12,21 @@ public class ModPackets {
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar("1");
+        // Shop
         registrar.playToServer(BuyItemPacket.TYPE,  BuyItemPacket.CODEC,  BuyItemPacket::handle);
         registrar.playToServer(SellItemPacket.TYPE, SellItemPacket.CODEC, SellItemPacket::handle);
+        // Auction House — client → server
+        registrar.playToServer(AHBuyPacket.TYPE,    AHBuyPacket.CODEC,    AHBuyPacket::handle);
+        registrar.playToServer(AHListPacket.TYPE,   AHListPacket.CODEC,   AHListPacket::handle);
+        registrar.playToServer(AHCancelPacket.TYPE, AHCancelPacket.CODEC, AHCancelPacket::handle);
+        registrar.playToServer(AHClaimPacket.TYPE,  AHClaimPacket.CODEC,  AHClaimPacket::handle);
+        // Auction House — server → client
+        registrar.playToClient(AHSyncPacket.TYPE,   AHSyncPacket.CODEC,   AHSyncPacket::handle);
+        // Tableau de chasse — server → client
+        registrar.playToClient(ChaseSyncPacket.TYPE,   ChaseSyncPacket.CODEC,   ChaseSyncPacket::handle);
+        // Atelier Create — server → client
+        registrar.playToClient(CraftSyncPacket.TYPE,   CraftSyncPacket.CODEC,   CraftSyncPacket::handle);
+        // Balance HUD — server → client
+        registrar.playToClient(BalanceSyncPacket.TYPE, BalanceSyncPacket.CODEC, BalanceSyncPacket::handle);
     }
 }
