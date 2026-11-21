@@ -105,8 +105,12 @@ public class AuctionScreen extends AbstractContainerScreen<AuctionMenu> {
     @Override
     public void containerTick() {
         super.containerTick();
-        ClientBalance.value = menu.getBalance();
-        ClientBalance.initialized = true;
+        if (!ClientBalance.initialized) {
+            ClientBalance.value = menu.getBalance();
+            ClientBalance.initialized = true;
+        } else {
+            menu.updateBalance(ClientBalance.value);
+        }
     }
 
     @Override

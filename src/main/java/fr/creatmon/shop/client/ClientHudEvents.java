@@ -10,7 +10,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,18 +20,6 @@ public class ClientHudEvents {
     private static int debugFrames = 0;
 
     // ── Sync balance depuis le menu ouvert ────────────────────────────
-
-    @SubscribeEvent
-    public static void onClientTick(ClientTickEvent.Post event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.screen instanceof ShopScreen s) {
-            ClientBalance.value = s.getMenu().getBalance();
-            ClientBalance.initialized = true;
-        } else if (mc.screen instanceof AuctionScreen a) {
-            ClientBalance.value = a.getMenu().getBalance();
-            ClientBalance.initialized = true;
-        }
-    }
 
     // ── HUD en jeu ────────────────────────────────────────────────────
 

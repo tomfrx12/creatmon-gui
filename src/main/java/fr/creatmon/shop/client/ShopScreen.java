@@ -91,8 +91,15 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
     @Override
     public void containerTick() {
         super.containerTick();
-        ClientBalance.value = menu.getBalance();
-        ClientBalance.initialized = true;
+        if (!ClientBalance.initialized) {
+            // BalanceSyncPacket not yet received — seed from the menu (set via buf.readInt on open)
+            ClientBalance.value = menu.getBalance();
+            ClientBalance.initialized = true;
+        } else {
+            // BalanceSyncPacket is authoritative; push to menu to neutralize ContainerData overflow
+            // (ContainerData syncs values as 16-bit shorts, which caps at 32 767)
+            menu.updateBalance(ClientBalance.value);
+        }
     }
 
     @Override
