@@ -69,6 +69,7 @@ public record AHBuyPacket(UUID listingId) implements CustomPacketPayload {
                     m.updateBalance(sb + cost);
                     m.broadcastChanges();
                 }
+                BalanceUtils.sendSync(sellerOnline);
                 sellerOnline.sendSystemMessage(Component.literal(
                     "§a[AH] §f" + player.getName().getString() + " a acheté §e" +
                     listing.sellerName() + " §7→ §e+" + cost + " €"));
