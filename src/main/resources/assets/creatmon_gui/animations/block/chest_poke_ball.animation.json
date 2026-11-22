@@ -1,0 +1,35 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"ouverture": {
+			"animation_length": 0.5833,
+			"bones": {
+				"haut": {
+					"rotation": {
+						"0.0417": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [-80, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"fermeture": {
+			"animation_length": 0.5833,
+			"bones": {
+				"haut": {
+					"rotation": {
+						"0.0417": {
+							"vector": [-80, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.chest_poke_ball",
+				"texture_width": 133,
+				"texture_height": 197,
+				"visible_bounds_width": 1,
+				"visible_bounds_height": 1,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{
+					"name": "poke_ball",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "haut",
+					"parent": "poke_ball",
+					"pivot": [0, 9, 9]
+				},
+				{
+					"name": "base",
+					"parent": "poke_ball",
+					"pivot": [0, 0, 0]
+				}
+			]
+		}
+	]
+}

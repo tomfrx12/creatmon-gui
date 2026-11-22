@@ -1,0 +1,4 @@
+# Creatmon GUI
+newmtl master_ball
+map_Kd creatmon_gui:block/chest_master_ball
+newmtl none

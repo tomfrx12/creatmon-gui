@@ -1,0 +1,4 @@
+# Creatmon GUI
+newmtl create_bronze
+map_Kd creatmon_gui:block/chest_create_bronze
+newmtl none

@@ -1,0 +1,4 @@
+# Creatmon GUI
+newmtl poke_ball
+map_Kd creatmon_gui:block/chest_poke_ball
+newmtl none
