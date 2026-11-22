@@ -28,5 +28,11 @@ public class ModPackets {
         registrar.playToClient(CraftSyncPacket.TYPE,   CraftSyncPacket.CODEC,   CraftSyncPacket::handle);
         // Balance HUD — server → client
         registrar.playToClient(BalanceSyncPacket.TYPE, BalanceSyncPacket.CODEC, BalanceSyncPacket::handle);
+        // LootBox — server → client
+        registrar.playToClient(LootBoxOpenPacket.TYPE,    LootBoxOpenPacket.CODEC,    LootBoxOpenPacket::handle);
+        registrar.playToClient(LootBoxResultPacket.TYPE,  LootBoxResultPacket.CODEC,  LootBoxResultPacket::handle);
+        registrar.playToClient(ItemBoxResultPacket.TYPE,  ItemBoxResultPacket.CODEC,  ItemBoxResultPacket::handle);
+        // LootBox — client → server
+        registrar.playToServer(LootBoxClaimPacket.TYPE,   LootBoxClaimPacket.CODEC,   LootBoxClaimPacket::handle);
     }
 }
