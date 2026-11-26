@@ -56,13 +56,42 @@ public class LootBoxConfig {
 
     private static void writeDefault(Path path) {
         JsonObject root = new JsonObject();
-        JsonArray arr = new JsonArray();
-        JsonObject e = new JsonObject();
-        e.addProperty("item", "minecraft:diamond");
-        e.addProperty("weight", 10);
-        e.addProperty("count", 1);
-        arr.add(e);
-        root.add("poke_ball", arr);
+        addRewards(root, "poke_ball",
+            reward("minecraft:iron_ingot",  3, 40),
+            reward("minecraft:gold_ingot",  1, 20),
+            reward("minecraft:diamond",     1,  5),
+            reward("minecraft:emerald",     1,  5),
+            reward("minecraft:bread",       4, 30));
+        addRewards(root, "master_ball",
+            reward("minecraft:diamond",     3, 40),
+            reward("minecraft:netherite_ingot", 1, 10),
+            reward("minecraft:enchanted_golden_apple", 1, 5),
+            reward("minecraft:nether_star", 1,  5),
+            reward("minecraft:emerald",     5, 40));
+        addRewards(root, "create_bronze",
+            reward("minecraft:iron_ingot",  4, 50),
+            reward("minecraft:copper_ingot",8, 50),
+            reward("minecraft:gold_ingot",  2, 20),
+            reward("minecraft:diamond",     1,  5));
+        addRewards(root, "create_gold",
+            reward("minecraft:gold_ingot",  4, 50),
+            reward("minecraft:diamond",     2, 20),
+            reward("minecraft:netherite_scrap", 1, 10),
+            reward("minecraft:emerald",     3, 20));
         try { Files.writeString(path, GSON.toJson(root)); } catch (IOException ex) { ex.printStackTrace(); }
+    }
+
+    private static JsonObject reward(String item, int count, int weight) {
+        JsonObject o = new JsonObject();
+        o.addProperty("item", item);
+        o.addProperty("weight", weight);
+        o.addProperty("count", count);
+        return o;
+    }
+
+    private static void addRewards(JsonObject root, String type, JsonObject... rewards) {
+        JsonArray arr = new JsonArray();
+        for (JsonObject r : rewards) arr.add(r);
+        root.add(type, arr);
     }
 }

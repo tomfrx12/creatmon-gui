@@ -1,0 +1,47 @@
+{
+  "entries": [
+    { "item": "minecraft:arrow",           "quantity":  8, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:coal",            "quantity":  4, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:bread",           "quantity":  3, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:oak_log",         "quantity":  8, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:cobblestone",     "quantity": 16, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:wheat",           "quantity":  8, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:bone",            "quantity":  4, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:gunpowder",       "quantity":  4, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:string",          "quantity":  8, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:leather",         "quantity":  2, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:feather",         "quantity":  8, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:apple",           "quantity":  4, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:sugar_cane",      "quantity":  8, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:gravel",          "quantity": 16, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:sand",            "quantity": 16, "rarity": "COMMUN",     "weight": 100 },
+    { "item": "minecraft:oak_planks",      "quantity": 16, "rarity": "COMMUN",     "weight": 100 },
+
+    { "item": "minecraft:iron_ingot",      "quantity":  2, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:gold_ingot",      "quantity":  1, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:book",            "quantity":  2, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:ender_pearl",     "quantity":  2, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:blaze_rod",       "quantity":  2, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:quartz",          "quantity":  8, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:slime_ball",      "quantity":  4, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:experience_bottle","quantity": 2, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:saddle",          "quantity":  1, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:name_tag",        "quantity":  1, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:iron_pickaxe",    "quantity":  1, "rarity": "PEU_COMMUN", "weight":  25 },
+    { "item": "minecraft:iron_sword",      "quantity":  1, "rarity": "PEU_COMMUN", "weight":  25 },
+
+    { "item": "minecraft:diamond",         "quantity":  1, "rarity": "RARE",       "weight":   5 },
+    { "item": "minecraft:emerald",         "quantity":  2, "rarity": "RARE",       "weight":   5 },
+    { "item": "minecraft:lapis_lazuli",    "quantity":  8, "rarity": "RARE",       "weight":   5 },
+    { "item": "minecraft:golden_apple",    "quantity":  1, "rarity": "RARE",       "weight":   5 },
+    { "item": "minecraft:nether_star",     "quantity":  1, "rarity": "RARE",       "weight":   5 },
+    { "item": "minecraft:diamond_sword",   "quantity":  1, "rarity": "RARE",       "weight":   5 },
+    { "item": "minecraft:diamond_pickaxe", "quantity":  1, "rarity": "RARE",       "weight":   5 },
+    { "item": "minecraft:elytra",          "quantity":  1, "rarity": "RARE",       "weight":   5 },
+
+    { "item": "minecraft:netherite_ingot", "quantity":  1, "rarity": "LEGENDAIRE", "weight":   1 },
+    { "item": "minecraft:enchanted_golden_apple","quantity":1,"rarity":"LEGENDAIRE","weight":  1 },
+    { "item": "minecraft:diamond",         "quantity":  5, "rarity": "LEGENDAIRE", "weight":   1 },
+    { "item": "minecraft:totem_of_undying","quantity":  1, "rarity": "LEGENDAIRE", "weight":   1 }
+  ]
+}

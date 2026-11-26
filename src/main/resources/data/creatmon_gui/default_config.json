@@ -1,0 +1,71 @@
+{
+  "categories": [
+    {
+      "id": "equipement",
+      "label": "Equipement & Combat",
+      "icon": "minecraft:diamond_sword",
+      "color": "#CC3333",
+      "items": [
+        { "id": "iron_sword",     "item": "minecraft:iron_sword",     "name": "Epee en Fer",       "desc": "Arme de base.",                "buy": 80,   "sell": 20  },
+        { "id": "bow",            "item": "minecraft:bow",            "name": "Arc",               "desc": "Attaque a distance.",          "buy": 60,   "sell": 15  },
+        { "id": "arrow",          "item": "minecraft:arrow",          "name": "Fleche x16",        "desc": "Munition pour arc.",           "buy": 20,   "sell": 5,  "count": 16 },
+        { "id": "shield",         "item": "minecraft:shield",         "name": "Bouclier",          "desc": "Bloque les attaques.",         "buy": 120,  "sell": 30  },
+        { "id": "iron_helmet",    "item": "minecraft:iron_helmet",    "name": "Casque en Fer",     "desc": "Protection tete.",             "buy": 100,  "sell": 25  },
+        { "id": "iron_chestplate","item": "minecraft:iron_chestplate","name": "Plastron en Fer",   "desc": "Protection thorax.",           "buy": 160,  "sell": 40  },
+        { "id": "iron_leggings",  "item": "minecraft:iron_leggings",  "name": "Jambières en Fer",  "desc": "Protection jambes.",           "buy": 140,  "sell": 35  },
+        { "id": "iron_boots",     "item": "minecraft:iron_boots",     "name": "Bottes en Fer",     "desc": "Protection pieds.",            "buy": 80,   "sell": 20  },
+        { "id": "diamond_sword",  "item": "minecraft:diamond_sword",  "name": "Epee en Diamant",  "desc": "Arme de haut niveau.",         "buy": 1200, "sell": 0   },
+        { "id": "golden_apple",   "item": "minecraft:golden_apple",   "name": "Pomme Doree",       "desc": "Regeneration et absorption.",  "buy": 300,  "sell": 0   }
+      ]
+    },
+    {
+      "id": "outils",
+      "label": "Outils & Artisanat",
+      "icon": "minecraft:iron_pickaxe",
+      "color": "#DDAA00",
+      "items": [
+        { "id": "iron_pickaxe",   "item": "minecraft:iron_pickaxe",   "name": "Pioche en Fer",    "desc": "Mine pierre et minerais.",     "buy": 120,  "sell": 30  },
+        { "id": "iron_axe",       "item": "minecraft:iron_axe",       "name": "Hache en Fer",     "desc": "Coupe le bois.",               "buy": 100,  "sell": 25  },
+        { "id": "iron_shovel",    "item": "minecraft:iron_shovel",    "name": "Pelle en Fer",     "desc": "Creuse la terre.",             "buy": 80,   "sell": 20  },
+        { "id": "flint_steel",    "item": "minecraft:flint_and_steel","name": "Briquet",           "desc": "Allume feux et portails.",     "buy": 50,   "sell": 12  },
+        { "id": "crafting_table", "item": "minecraft:crafting_table", "name": "Table d'Artisanat","desc": "Recettes 3x3.",                "buy": 10,   "sell": 2   },
+        { "id": "furnace",        "item": "minecraft:furnace",        "name": "Four",              "desc": "Fait fondre et cuire.",        "buy": 20,   "sell": 5   },
+        { "id": "chest",          "item": "minecraft:chest",          "name": "Coffre",            "desc": "27 slots de stockage.",        "buy": 25,   "sell": 6   },
+        { "id": "bucket",         "item": "minecraft:bucket",         "name": "Seau",              "desc": "Transporte liquides.",         "buy": 40,   "sell": 10  }
+      ]
+    },
+    {
+      "id": "ressources",
+      "label": "Ressources & Minerais",
+      "icon": "minecraft:iron_ore",
+      "color": "#3399CC",
+      "items": [
+        { "id": "cobblestone",    "item": "minecraft:cobblestone",    "name": "Pierre Taillee x16","desc": "Bloc de construction.",        "buy": 10,   "sell": 2,  "count": 16 },
+        { "id": "oak_log",        "item": "minecraft:oak_log",        "name": "Buche de Chene x8", "desc": "Bois de base.",               "buy": 20,   "sell": 5,  "count": 8  },
+        { "id": "iron_ingot",     "item": "minecraft:iron_ingot",     "name": "Lingot de Fer",     "desc": "Metal de base.",              "buy": 50,   "sell": 18              },
+        { "id": "gold_ingot",     "item": "minecraft:gold_ingot",     "name": "Lingot d'Or",       "desc": "Metal precieux.",             "buy": 90,   "sell": 30              },
+        { "id": "diamond",        "item": "minecraft:diamond",        "name": "Diamant",           "desc": "Minerai le plus dur.",        "buy": 500,  "sell": 150             },
+        { "id": "redstone",       "item": "minecraft:redstone",       "name": "Poudre de Redstone","desc": "Circuits electroniques.",     "buy": 25,   "sell": 8               },
+        { "id": "coal",           "item": "minecraft:coal",           "name": "Charbon x8",        "desc": "Combustible pour four.",      "buy": 15,   "sell": 4,  "count": 8  },
+        { "id": "lapis_lazuli",   "item": "minecraft:lapis_lazuli",   "name": "Lapis Lazuli",      "desc": "Enchantemens et teinture.",   "buy": 60,   "sell": 15              },
+        { "id": "emerald",        "item": "minecraft:emerald",        "name": "Emeraude",          "desc": "Monnaie villageoise.",        "buy": 200,  "sell": 60              }
+      ]
+    },
+    {
+      "id": "deco",
+      "label": "Nourriture & Deco",
+      "icon": "minecraft:bread",
+      "color": "#9933CC",
+      "items": [
+        { "id": "bread",          "item": "minecraft:bread",          "name": "Pain",              "desc": "Restaure 5 points de faim.",   "buy": 10,   "sell": 3   },
+        { "id": "cooked_beef",    "item": "minecraft:cooked_beef",    "name": "Boeuf Cuit",        "desc": "Restaure 8 points de faim.",   "buy": 25,   "sell": 8   },
+        { "id": "carrot",         "item": "minecraft:carrot",         "name": "Carotte x8",        "desc": "Culture et nourriture.",       "buy": 15,   "sell": 4,  "count": 8  },
+        { "id": "glowstone",      "item": "minecraft:glowstone",      "name": "Glowstone",         "desc": "Eclaire et est decoratif.",    "buy": 50,   "sell": 15  },
+        { "id": "lantern",        "item": "minecraft:lantern",        "name": "Lanterne",          "desc": "Eclairage charmant.",          "buy": 35,   "sell": 8   },
+        { "id": "barrel",         "item": "minecraft:barrel",         "name": "Tonneau",           "desc": "Stockage decoratif.",          "buy": 25,   "sell": 6   },
+        { "id": "bookshelf",      "item": "minecraft:bookshelf",      "name": "Bibliotheque",      "desc": "Booste les enchantements.",    "buy": 60,   "sell": 15  },
+        { "id": "flower_pot",     "item": "minecraft:flower_pot",     "name": "Pot de Fleur",      "desc": "Decoration interieure.",       "buy": 15,   "sell": 3   }
+      ]
+    }
+  ]
+}
