@@ -217,6 +217,11 @@ public class ItemBoxScreen extends Screen {
     @Override
     public void render(GuiGraphics g, int mx, int my, float pt) {
         lastMX = mx; lastMY = my;
+        if (phase == Phase.IDLE && !showPoolOverlay) {
+            renderBackground(g, mx, my, pt);
+            drawPreview(g);
+            return;
+        }
         renderBackground(g, mx, my, pt);
         int x = (width - W) / 2, y = (height - H) / 2;
         drawPanel(g, x, y);
@@ -556,6 +561,148 @@ public class ItemBoxScreen extends Screen {
         g.pose().popPose();
     }
 
+    // ── Aperçu (phase IDLE) : grille du contenu + bulle "Ouvrir" ─────
+
+    private static final int PV_COLS    = 9;
+    private static final int PV_SLOT    = 20;
+    private static final int PV_GAP     = 2;
+    private static final int PV_BORDER  = 5;
+    private static final int PV_YELLOW  = 0xFFF7B21C;
+    private static final int PV_YEL_DK  = 0xFFB97A0A;
+    private static final int PV_OUTLINE = 0xFF2A1A00;
+    private static final int PV_INNER   = 0xFF3B3B3B;
+    private static final int PV_SLOT_BG = 0xFF5B5B5B;
+    private static final int PV_SLOT_HL = 0xFF7A7A7A;
+    private static final int TIP_BG     = 0xF0101C28;
+    private static final int TIP_BORDER = 0xFF3F8FC4;
+    private static final int TIP_TITLE  = 0xFF7FD8FF;
+    private static final int TIP_RED    = 0xFFFF5555;
+    private static final int TIP_GREEN  = 0xFF55FF55;
+    private static final int BAR_GAP    = 4;
+    private static final int BAR_H      = 26;
+    private static final int PV_OPEN_W  = 110;
+    private static final int PV_OPEN_H  = 18;
+
+    /** gx/gy/gw/gh : grille ; tx/ty : barre du bas (même largeur que la grille). */
+    private record PvLayout(int gx, int gy, int gw, int gh, int rows, int tx, int ty) {}
+
+    private PvLayout pvLayout() {
+        int n    = ItemPool.getPool().size();
+        int rows = Math.max(3, (n + PV_COLS - 1) / PV_COLS);
+        int gw   = PV_COLS * PV_SLOT + (PV_COLS - 1) * PV_GAP + PV_BORDER * 2 + 4;
+        int gh   = rows * PV_SLOT + (rows - 1) * PV_GAP + PV_BORDER * 2 + 4;
+        int gx = (width  - gw) / 2;
+        int gy = (height - (gh + BAR_GAP + BAR_H)) / 2;
+        return new PvLayout(gx, gy, gw, gh, rows, gx, gy + gh + BAR_GAP);
+    }
+
+    private int pvOpenX(PvLayout l) { return l.tx() + l.gw() - PV_OPEN_W - 4; }
+    private int pvOpenY(PvLayout l) { return l.ty() + (BAR_H - PV_OPEN_H) / 2; }
+
+    private void drawPreview(GuiGraphics g) {
+        PvLayout l = pvLayout();
+        int gx = l.gx(), gy = l.gy(), gw = l.gw(), gh = l.gh();
+
+        // Cadre jaune aux coins arrondis
+        g.fill(gx + 2, gy, gx + gw - 2, gy + gh, PV_OUTLINE);
+        g.fill(gx, gy + 2, gx + gw, gy + gh - 2, PV_OUTLINE);
+        g.fill(gx + 2, gy + 1, gx + gw - 2, gy + gh - 1, PV_YELLOW);
+        g.fill(gx + 1, gy + 2, gx + gw - 1, gy + gh - 2, PV_YELLOW);
+        g.fill(gx + 1, gy + gh - 3, gx + gw - 1, gy + gh - 2, PV_YEL_DK);
+        g.fill(gx + 2, gy + gh - 2, gx + gw - 2, gy + gh - 1, PV_YEL_DK);
+        // Fond intérieur
+        int ix = gx + PV_BORDER, iy = gy + PV_BORDER;
+        g.fill(ix, iy, gx + gw - PV_BORDER, gy + gh - PV_BORDER, PV_OUTLINE);
+        g.fill(ix + 1, iy + 1, gx + gw - PV_BORDER - 1, gy + gh - PV_BORDER - 1, PV_INNER);
+
+        List<ItemPool.PoolEntry> pool = sortedPool();
+        int sx0 = ix + 2, sy0 = iy + 2;
+        boolean overBubble = false;
+        ItemPool.PoolEntry hovered = null;
+        for (int i = 0; i < l.rows() * PV_COLS; i++) {
+            int sx = sx0 + (i % PV_COLS) * (PV_SLOT + PV_GAP);
+            int sy = sy0 + (i / PV_COLS) * (PV_SLOT + PV_GAP);
+            boolean hov = i < pool.size() && !overBubble && isHov(sx, sy, PV_SLOT, PV_SLOT);
+            g.fill(sx, sy, sx + PV_SLOT, sy + PV_SLOT, hov ? PV_SLOT_HL : PV_SLOT_BG);
+            if (i >= pool.size()) continue;
+            ItemPool.PoolEntry e = pool.get(i);
+            ItemStack st = getItemStack(e.itemId());
+            if (!st.isEmpty()) {
+                g.renderItem(st, sx + 2, sy + 2);
+                if (e.quantity() > 1) {
+                    String q = String.valueOf(e.quantity());
+                    g.pose().pushPose();
+                    g.pose().translate(0, 0, 200);
+                    g.drawString(font, q, sx + PV_SLOT - 1 - font.width(q), sy + PV_SLOT - 9, WHITE, true);
+                    g.pose().popPose();
+                }
+            }
+            if (hov) hovered = e;
+        }
+
+        drawOpenBubble(g, l);
+
+        if (hovered != null) {
+            int total = Math.max(1, ItemPool.getPool().stream().mapToInt(ItemPool.PoolEntry::weight).sum());
+            List<Component> lines = List.of(
+                Component.literal((hovered.quantity() > 1 ? hovered.quantity() + "× " : "") + getItemName(hovered.itemId())),
+                Component.literal(hovered.rarity().label).withColor(hovered.rarity().color),
+                Component.literal(String.format("%.2f%%", hovered.weight() * 100f / total)).withColor(GRAY));
+            g.pose().pushPose();
+            g.pose().translate(0, 0, 400);
+            g.renderComponentTooltip(font, lines, lastMX, lastMY);
+            g.pose().popPose();
+        }
+    }
+
+    private void drawOpenBubble(GuiGraphics g, PvLayout l) {
+        int tx = l.tx(), ty = l.ty(), tw = l.gw();
+        // Fond de la barre
+        g.fill(tx, ty, tx + tw, ty + BAR_H, TIP_BG);
+        g.fill(tx, ty, tx + tw, ty + 1, TIP_BORDER);
+        g.fill(tx, ty + BAR_H - 1, tx + tw, ty + BAR_H, TIP_BORDER);
+        g.fill(tx, ty, tx + 1, ty + BAR_H, TIP_BORDER);
+        g.fill(tx + tw - 1, ty, tx + tw, ty + BAR_H, TIP_BORDER);
+
+        // Clés possédées (à gauche)
+        ItemStack ks = getKeySprite();
+        int lx = tx + 6, ly = ty + (BAR_H - 8) / 2;
+        if (!ks.isEmpty()) { g.renderItem(ks, lx, ty + (BAR_H - 16) / 2); lx += 20; }
+        String num = String.valueOf(keyCount), post = keyCount > 1 ? " clés" : " clé";
+        g.drawString(font, num, lx, ly, keyCount > 0 ? TIP_GREEN : TIP_RED, false);
+        g.drawString(font, post, lx + font.width(num), ly, WHITE, false);
+
+        // Bouton Ouvrir (à droite)
+        int ox = pvOpenX(l), oy = pvOpenY(l);
+        boolean can = keyCount > 0;
+        boolean hov = can && isHov(ox, oy, PV_OPEN_W, PV_OPEN_H);
+        int bg = !can ? 0xFF3A3A3A : hov ? PV_YELLOW : PV_YEL_DK;
+        g.fill(ox, oy, ox + PV_OPEN_W, oy + PV_OPEN_H, PV_OUTLINE);
+        g.fill(ox + 1, oy + 1, ox + PV_OPEN_W - 1, oy + PV_OPEN_H - 1, bg);
+        if (can) g.fill(ox + 1, oy + 1, ox + PV_OPEN_W - 1, oy + 2, 0x55FFFFFF);
+        String label = can ? "Ouvrir (1 clé)" : "Aucune clé";
+        g.drawCenteredString(font, label, ox + PV_OPEN_W / 2, oy + (PV_OPEN_H - 8) / 2, can ? WHITE : GRAY);
+    }
+
+    private boolean previewClicked() {
+        PvLayout l = pvLayout();
+        if (keyCount > 0 && isHov(pvOpenX(l), pvOpenY(l), PV_OPEN_W, PV_OPEN_H)) {
+            selectedCount = 1;
+            if (minecraft != null)
+                minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1f));
+            PacketDistributor.sendToServer(new LootBoxClaimPacket(chestType, 1));
+            return true;
+        }
+        return false;
+    }
+
+    /** Pool trié du plus rare au plus commun pour la grille. */
+    private List<ItemPool.PoolEntry> sortedPool() {
+        List<ItemPool.PoolEntry> list = new ArrayList<>(ItemPool.getPool());
+        list.sort((a, b) -> b.rarity().ordinal() - a.rarity().ordinal());
+        return list;
+    }
+
     // ── Interactions ──────────────────────────────────────────────────
 
     @Override
@@ -574,6 +721,8 @@ public class ItemBoxScreen extends Screen {
             if (!isHov(ox, oy, OV_W, OV_H)) { showPoolOverlay = false; return true; }
             return true;
         }
+
+        if (phase == Phase.IDLE) return previewClicked() || super.mouseClicked(mx, my, btn);
 
         int lotsBtnW = 100, lotsBtnH = 14;
         int lotsBtnX = x + W - FTR_PAD - lotsBtnW;
