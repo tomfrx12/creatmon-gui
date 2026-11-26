@@ -82,11 +82,14 @@ public class ShopMenu extends AbstractContainerMenu {
     }
 
     public ShopData.ShopCategory currentCategory() {
-        return ShopData.CATEGORIES.get(categoryIndex);
+        if (ShopData.CATEGORIES.isEmpty()) return null;
+        return ShopData.CATEGORIES.get(Math.min(categoryIndex, ShopData.CATEGORIES.size() - 1));
     }
 
     public java.util.List<ShopData.ShopItem> currentPageItems() {
-        var items = currentCategory().items();
+        var cat = currentCategory();
+        if (cat == null) return java.util.List.of();
+        var items = cat.items();
         int from  = page * PAGE_SIZE;
         int to    = Math.min(from + PAGE_SIZE, items.size());
         return from < items.size() ? items.subList(from, to) : java.util.List.of();

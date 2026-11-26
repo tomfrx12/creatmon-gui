@@ -225,9 +225,11 @@ public class ShopScreen extends AbstractContainerScreen<ShopMenu> {
         int px = (W - pw) / 2;
         g.drawString(font, balStr, px + 6, 18, GOLD, false);
 
-        ShopData.ShopCategory cat = ShopData.CATEGORIES.get(menu.getCategoryIndex());
-        g.drawString(font, "■", GRID_X,                        HEADER_H + 3, cat.color(),  false);
-        g.drawString(font, cat.label(), GRID_X + font.width("■ "), HEADER_H + 3, 0xFFCCDDEE, false);
+        ShopData.ShopCategory cat = menu.currentCategory();
+        if (cat != null) {
+            g.drawString(font, "■", GRID_X,                        HEADER_H + 3, cat.color(),  false);
+            g.drawString(font, cat.label(), GRID_X + font.width("■ "), HEADER_H + 3, 0xFFCCDDEE, false);
+        }
 
         int invLabelW = font.width("Inventaire");
         g.drawString(font, "Inventaire", (W - invLabelW) / 2, FOOTER_Y + 18, INV_LABEL, false);
