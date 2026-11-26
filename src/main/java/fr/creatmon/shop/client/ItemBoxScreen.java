@@ -151,8 +151,66 @@ public class ItemBoxScreen extends Screen {
 
     public void onOpen(int keyCount) { this.keyCount = keyCount; }
 
+    // ── Animation "curseur" sur la grille d'aperçu ────────────────────
+    private boolean gridSpin    = false;   // le carré défile
+    private boolean gridDone    = false;   // le carré s'est arrêté sur le lot gagné
+    private int     gridCursor  = -1;      // index (dans sortedPool) du slot surligné
+    private int     gridSteps   = 0;       // pas restants avant l'arrêt
+    private int     gridTotal   = 1;
+    private int     gridWait    = 0;       // ticks avant le prochain pas
+    private int     gridDoneTick = 0;
+
+    private void startGridSpin(String itemId, int qty) {
+        List<ItemPool.PoolEntry> pool = sortedPool();
+        int n = pool.size();
+        if (n == 0) return;
+        int target = 0;
+        for (int i = 0; i < n; i++) {
+            ItemPool.PoolEntry e = pool.get(i);
+            if (e.itemId().equals(itemId) && e.quantity() == qty) { target = i; break; }
+            if (e.itemId().equals(itemId)) target = i;
+        }
+        int start = gridCursor < 0 ? 0 : gridCursor;
+        int laps  = n < 12 ? 4 : n < 30 ? 3 : 2;
+        gridTotal  = laps * n + Math.floorMod(target - start, n);
+        gridSteps  = gridTotal;
+        gridCursor = start;
+        gridWait   = 0;
+        gridSpin   = true;
+        gridDone   = false;
+    }
+
+    private void tickGrid() {
+        if (gridDone) { gridDoneTick++; return; }
+        if (!gridSpin) return;
+        if (--gridWait > 0) return;
+        int n = Math.max(1, sortedPool().size());
+        gridCursor = (gridCursor + 1) % n;
+        gridSteps--;
+        float p = 1f - (float) gridSteps / gridTotal;           // 0 → 1
+        gridWait = 1 + (int) (p * p * p * 9);                    // ralentit vers la fin
+        if (minecraft != null)
+            minecraft.getSoundManager().play(
+                SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_HAT.value(), 1.6f - 0.8f * p));
+        if (gridSteps <= 0) {
+            gridSpin = false;
+            gridDone = true;
+            gridDoneTick = 0;
+            if (minecraft != null)
+                minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.PLAYER_LEVELUP, 0.6f));
+        }
+    }
+
     public void onResult(ItemBoxResultPacket pkt) {
-        if (phase != Phase.IDLE) return;
+        if (phase == Phase.IDLE && !gridSpin && pkt.allItemIds().size() == 1) {
+            allItemIds    = new ArrayList<>(pkt.allItemIds());
+            allQuantities = new ArrayList<>(pkt.allQuantities());
+            allRarities   = new ArrayList<>(pkt.allRarities());
+            keyCount      = pkt.newKeyCount();
+            startGridSpin(allItemIds.get(0), allQuantities.isEmpty() ? 1 : allQuantities.get(0));
+            return;
+        }
+        if (phase != Phase.IDLE || gridSpin) return;
 
         allItemIds   = new ArrayList<>(pkt.allItemIds());
         allQuantities = new ArrayList<>(pkt.allQuantities());
@@ -183,6 +241,7 @@ public class ItemBoxScreen extends Screen {
     @Override
     public void tick() {
         super.tick();
+        tickGrid();
         if (phase != Phase.SPINNING) return;
 
         animTick++;
@@ -622,7 +681,7 @@ public class ItemBoxScreen extends Screen {
         for (int i = 0; i < l.rows() * PV_COLS; i++) {
             int sx = sx0 + (i % PV_COLS) * (PV_SLOT + PV_GAP);
             int sy = sy0 + (i / PV_COLS) * (PV_SLOT + PV_GAP);
-            boolean hov = i < pool.size() && !overBubble && isHov(sx, sy, PV_SLOT, PV_SLOT);
+            boolean hov = i < pool.size() && !gridSpin && !overBubble && isHov(sx, sy, PV_SLOT, PV_SLOT);
             g.fill(sx, sy, sx + PV_SLOT, sy + PV_SLOT, hov ? PV_SLOT_HL : PV_SLOT_BG);
             if (i >= pool.size()) continue;
             ItemPool.PoolEntry e = pool.get(i);
@@ -638,6 +697,22 @@ public class ItemBoxScreen extends Screen {
                 }
             }
             if (hov) hovered = e;
+        }
+
+        // Carré de sélection qui défile / s'arrête sur le lot gagné
+        if ((gridSpin || gridDone) && gridCursor >= 0 && gridCursor < pool.size()) {
+            int sx = sx0 + (gridCursor % PV_COLS) * (PV_SLOT + PV_GAP);
+            int sy = sy0 + (gridCursor / PV_COLS) * (PV_SLOT + PV_GAP);
+            int col = gridDone
+                ? ((gridDoneTick / 4) % 2 == 0 ? 0xFFFFFFFF : pool.get(gridCursor).rarity().color | 0xFF000000)
+                : 0xFFFFFFFF;
+            g.pose().pushPose();
+            g.pose().translate(0, 0, 250);
+            g.fill(sx - 2, sy - 2, sx + PV_SLOT + 2, sy, col);
+            g.fill(sx - 2, sy + PV_SLOT, sx + PV_SLOT + 2, sy + PV_SLOT + 2, col);
+            g.fill(sx - 2, sy, sx, sy + PV_SLOT, col);
+            g.fill(sx + PV_SLOT, sy, sx + PV_SLOT + 2, sy + PV_SLOT, col);
+            g.pose().popPose();
         }
 
         drawOpenBubble(g, l);
@@ -672,21 +747,33 @@ public class ItemBoxScreen extends Screen {
         g.drawString(font, num, lx, ly, keyCount > 0 ? TIP_GREEN : TIP_RED, false);
         g.drawString(font, post, lx + font.width(num), ly, WHITE, false);
 
+        // Lot gagné (au milieu)
+        if (gridDone && !allItemIds.isEmpty()) {
+            int qty = allQuantities.isEmpty() ? 1 : allQuantities.get(0);
+            int rar = allRarities.isEmpty() ? 0 : allRarities.get(0);
+            String msg = (qty > 1 ? qty + "× " : "") + getItemName(allItemIds.get(0));
+            int mx0 = lx + font.width(num + post) + 8, mx1 = pvOpenX(l) - 6;
+            while (font.width(msg) > mx1 - mx0 && msg.length() > 3) msg = msg.substring(0, msg.length() - 2) + "…";
+            g.drawCenteredString(font, msg, (mx0 + mx1) / 2, ly,
+                RARITY_COLORS[Math.min(rar, RARITY_COLORS.length - 1)]);
+        }
+
         // Bouton Ouvrir (à droite)
         int ox = pvOpenX(l), oy = pvOpenY(l);
-        boolean can = keyCount > 0;
+        boolean can = keyCount > 0 && !gridSpin;
         boolean hov = can && isHov(ox, oy, PV_OPEN_W, PV_OPEN_H);
         int bg = !can ? 0xFF3A3A3A : hov ? PV_YELLOW : PV_YEL_DK;
         g.fill(ox, oy, ox + PV_OPEN_W, oy + PV_OPEN_H, PV_OUTLINE);
         g.fill(ox + 1, oy + 1, ox + PV_OPEN_W - 1, oy + PV_OPEN_H - 1, bg);
         if (can) g.fill(ox + 1, oy + 1, ox + PV_OPEN_W - 1, oy + 2, 0x55FFFFFF);
-        String label = can ? "Ouvrir (1 clé)" : "Aucune clé";
+        String label = gridSpin ? "Ouverture..." : can ? "Ouvrir (1 clé)" : "Aucune clé";
         g.drawCenteredString(font, label, ox + PV_OPEN_W / 2, oy + (PV_OPEN_H - 8) / 2, can ? WHITE : GRAY);
     }
 
     private boolean previewClicked() {
         PvLayout l = pvLayout();
-        if (keyCount > 0 && isHov(pvOpenX(l), pvOpenY(l), PV_OPEN_W, PV_OPEN_H)) {
+        if (!gridSpin && keyCount > 0 && isHov(pvOpenX(l), pvOpenY(l), PV_OPEN_W, PV_OPEN_H)) {
+            gridDone = false;
             selectedCount = 1;
             if (minecraft != null)
                 minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1f));
