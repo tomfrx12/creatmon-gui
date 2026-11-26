@@ -79,22 +79,16 @@ public class ChaseEvents {
 
     private static void registerCobblemonHook() {
         try {
-            com.cobblemon.mod.common.api.events.CobblemonEvents.POKEMON_CAPTURED.subscribe(
-                com.cobblemon.mod.common.api.Priority.NORMAL,
-                event -> {
-                    if (event.getPlayer() instanceof ServerPlayer player) {
-                        String species = event.getPokemon().getSpecies().getName().toLowerCase();
-                        handleCapture(player, species);
-                    }
-                    return kotlin.Unit.INSTANCE;
-                });
+            Class.forName("fr.creatmon.shop.chase.CobblemonChaseHook")
+                 .getMethod("register")
+                 .invoke(null);
             LOGGER.info("[Chasse] Hook Cobblemon enregistré (POKEMON_CAPTURED)");
         } catch (Throwable t) {
             LOGGER.warn("[Chasse] Hook Cobblemon indisponible: {}", t.getMessage());
         }
     }
 
-    private static void handleCapture(ServerPlayer player, String species) {
+    static void handleCapture(ServerPlayer player, String species) {
         int reward = ChaseData.tryComplete(player.getUUID(), species);
         if (reward > 0) {
             int bal = player.getPersistentData().getInt("cinet_balance");
