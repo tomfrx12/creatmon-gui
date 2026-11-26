@@ -32,7 +32,7 @@
 
     { "item": "minecraft:diamond",         "quantity":  1, "rarity": "RARE",       "weight":   5 },
     { "item": "minecraft:emerald",         "quantity":  2, "rarity": "RARE",       "weight":   5 },
-    { "item": "creatmon_gui:chest_poke_ball_key",    "quantity":  8, "rarity": "RARE",       "weight":   5 },
+    { "item": "minecraft:lapis_lazuli",    "quantity":  8, "rarity": "RARE",       "weight":   5 },
     { "item": "minecraft:golden_apple",    "quantity":  1, "rarity": "RARE",       "weight":   5 },
     { "item": "minecraft:nether_star",     "quantity":  1, "rarity": "RARE",       "weight":   5 },
     { "item": "minecraft:diamond_sword",   "quantity":  1, "rarity": "RARE",       "weight":   5 },
