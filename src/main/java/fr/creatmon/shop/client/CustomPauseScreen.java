@@ -30,7 +30,6 @@ public class CustomPauseScreen extends Screen {
     // ── Layout ────────────────────────────────────────────────────────
     private static final int PANEL_W   = 160;
     private static final int PANEL_MRG = 150;
-    private static final int PANEL_TOP = 250;
 
     private static final int BTN_W     = 200;
     private static final int BTN_H     = 20;
@@ -120,9 +119,9 @@ public class CustomPauseScreen extends Screen {
 
     private void drawLeft(GuiGraphics g) {
         int px = PANEL_MRG;
-        int py = PANEL_TOP;
+        int py = height / 6;
         int pw = PANEL_W;
-        int ph = height - PANEL_TOP * 2;
+        int ph = height - py * 2;
         panel(g, px, py, pw, ph);
 
         int cx   = px + pw / 2;
@@ -158,9 +157,9 @@ public class CustomPauseScreen extends Screen {
 
     private void drawRight(GuiGraphics g) {
         int px = width - PANEL_MRG - PANEL_W;
-        int py = PANEL_TOP;
+        int py = height / 6;
         int pw = PANEL_W;
-        int ph = height - PANEL_TOP * 2;
+        int ph = height - py * 2;
         panel(g, px, py, pw, ph);
 
         int cx   = px + pw / 2;
