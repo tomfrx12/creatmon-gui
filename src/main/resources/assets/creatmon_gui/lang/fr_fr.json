@@ -1,0 +1,13 @@
+{
+  "item.creatmon_gui.chest_poke_ball":       "Coffre Poké Ball",
+  "item.creatmon_gui.chest_master_ball":     "Coffre Master Ball",
+  "item.creatmon_gui.chest_create_bronze":   "Coffre Bronze Create",
+  "item.creatmon_gui.chest_create_gold":     "Coffre Gold Create",
+  "item.creatmon_gui.chest_poke_ball_key":   "Clé Poké Ball",
+  "item.creatmon_gui.chest_master_ball_key": "Clé Master Ball",
+
+  "block.creatmon_gui.chest_poke_ball":      "Coffre Poké Ball",
+  "block.creatmon_gui.chest_master_ball":    "Coffre Master Ball",
+  "block.creatmon_gui.chest_create_bronze":  "Coffre Bronze Create",
+  "block.creatmon_gui.chest_create_gold":    "Coffre Gold Create"
+}

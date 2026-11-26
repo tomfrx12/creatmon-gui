@@ -31,7 +31,10 @@ public record LootBoxOpenPacket(String chestType, int keyCount) implements Custo
     public static void handle(LootBoxOpenPacket pkt, IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             var mc = Minecraft.getInstance();
-            if ("poke_ball".equals(pkt.chestType())) {
+            boolean isItemBox = "poke_ball".equals(pkt.chestType())
+                             || "create_bronze".equals(pkt.chestType())
+                             || "create_gold".equals(pkt.chestType());
+            if (isItemBox) {
                 if (mc.screen instanceof ItemBoxScreen screen) {
                     screen.onOpen(pkt.keyCount());
                 } else {

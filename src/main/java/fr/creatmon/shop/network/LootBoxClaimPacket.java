@@ -1,6 +1,7 @@
 package fr.creatmon.shop.network;
 
 import fr.creatmon.shop.ModItems;
+import fr.creatmon.shop.lootbox.CreatePool;
 import fr.creatmon.shop.lootbox.ItemPool;
 import fr.creatmon.shop.lootbox.PokemonPool;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,9 +43,12 @@ public record LootBoxClaimPacket(String chestType, int count) implements CustomP
         ctx.enqueueWork(() -> {
             if (!(ctx.player() instanceof ServerPlayer player)) return;
 
-            Item keyItem = "master_ball".equals(pkt.chestType())
-                ? ModItems.MASTER_BALL_KEY.get()
-                : ModItems.POKE_BALL_KEY.get();
+            Item keyItem = switch (pkt.chestType()) {
+                case "master_ball"    -> ModItems.MASTER_BALL_KEY.get();
+                case "create_bronze"  -> ModItems.CREATE_BRONZE_KEY.get();
+                case "create_gold"    -> ModItems.CREATE_GOLD_KEY.get();
+                default               -> ModItems.POKE_BALL_KEY.get();
+            };
 
             int actualCount = Math.min(Math.max(pkt.count(), 1), 5);
 
@@ -54,12 +58,17 @@ public record LootBoxClaimPacket(String chestType, int count) implements CustomP
                 if (stack.is(keyItem)) remaining += stack.getCount();
             }
 
-            if ("poke_ball".equals(pkt.chestType())) {
+            boolean isItemBox = "poke_ball".equals(pkt.chestType())
+                || "create_bronze".equals(pkt.chestType())
+                || "create_gold".equals(pkt.chestType());
+            if (isItemBox) {
                 // ── Item loot box ────────────────────────────────────
                 List<String>  allIds = new ArrayList<>();
                 List<Integer> allQty = new ArrayList<>();
                 List<Integer> allRar = new ArrayList<>();
 
+                boolean isCreate = "create_bronze".equals(pkt.chestType())
+                    || "create_gold".equals(pkt.chestType());
                 for (int i = 0; i < actualCount; i++) {
                     int keySlot = -1;
                     for (int s = 0; s < player.getInventory().getContainerSize(); s++) {
@@ -69,7 +78,7 @@ public record LootBoxClaimPacket(String chestType, int count) implements CustomP
                     player.getInventory().getItem(keySlot).shrink(1);
                     remaining--;
 
-                    var roll = ItemPool.roll();
+                    var roll = isCreate ? CreatePool.roll() : ItemPool.roll();
                     allIds.add(roll.itemId());
                     allQty.add(roll.quantity());
                     allRar.add(roll.rarity().ordinal());

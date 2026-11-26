@@ -1,5 +1,6 @@
 package fr.creatmon.shop.client;
 
+import fr.creatmon.shop.lootbox.CreatePool;
 import fr.creatmon.shop.lootbox.ItemPool;
 import fr.creatmon.shop.network.ItemBoxResultPacket;
 import fr.creatmon.shop.network.LootBoxClaimPacket;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 public class ItemBoxScreen extends Screen {
@@ -124,7 +126,7 @@ public class ItemBoxScreen extends Screen {
         lastSoundIdx = -1;
         long base = System.nanoTime();
         for (int i = 0; i < MAX_N; i++) {
-            List<String> list = new ArrayList<>(ItemPool.decoys(IDLE_SEEDS[i % IDLE_SEEDS.length], 10));
+            List<String> list = new ArrayList<>(activeDecoys(IDLE_SEEDS[i % IDLE_SEEDS.length], 10));
             Collections.shuffle(list, new Random(base + i * 999983L));
             stripLists[i] = list;
         }
@@ -221,7 +223,7 @@ public class ItemBoxScreen extends Screen {
         long base = System.nanoTime();
         for (int i = 0; i < n; i++) {
             int need = LEAD_DECOYS + TRAIL_DECOYS + 2;
-            List<String> pool = new ArrayList<>(ItemPool.decoys(allItemIds.get(i), need));
+            List<String> pool = new ArrayList<>(activeDecoys(allItemIds.get(i), need));
             Collections.shuffle(pool, new Random(base + i * 1000003L));
             stripLists[i] = new ArrayList<>();
             for (int j = 0; j < LEAD_DECOYS; j++)
@@ -320,10 +322,10 @@ public class ItemBoxScreen extends Screen {
         g.pose().pushPose();
         g.pose().translate(x + W / 2f, y + 8f, 0f);
         g.pose().scale(1.8f, 1.8f, 1f);
-        g.drawCenteredString(font, "CAISSE POKÉ BALL", 0, 0, GOLD);
+        g.drawCenteredString(font, getScreenTitle(), 0, 0, GOLD);
         g.pose().popPose();
 
-        g.drawCenteredString(font, "Cobblemon Items", x + W / 2, y + 36, GOLD_LT);
+        g.drawCenteredString(font, getScreenSubtitle(), x + W / 2, y + 36, GOLD_LT);
 
         int cx = x + W - 14, cy = y + 5;
         g.fill(cx, cy, cx + 10, cy + 10, isHov(cx, cy, 10, 10) ? 0xFFBB2222 : 0xFF3A2000);
@@ -564,14 +566,14 @@ public class ItemBoxScreen extends Screen {
         };
 
         for (ItemPool.Rarity rarity : order) {
-            List<ItemPool.PoolEntry> entries = ItemPool.getPool().stream()
+            List<ItemPool.PoolEntry> entries = activePool().stream()
                 .filter(e -> e.rarity() == rarity).toList();
             if (entries.isEmpty()) continue;
 
             g.fill(ox + 2, drawY, ox + OV_W - 2, drawY + 18, 0xFF120E00);
             g.fill(ox + 2, drawY, ox + OV_W - 2, drawY + 1, rarity.color);
             g.drawString(font, rarity.label, contentX, drawY + 5, rarity.color, false);
-            int total = ItemPool.getPool().stream().mapToInt(ItemPool.PoolEntry::weight).sum();
+            int total = activePool().stream().mapToInt(ItemPool.PoolEntry::weight).sum();
             float pct = (float) entries.get(0).weight() / total * 100f;
             String pctStr = String.format("%.2f%%/entrée — %d lots", pct, entries.size());
             g.drawString(font, pctStr, contentX + 70, drawY + 5, GRAY, false);
@@ -646,7 +648,7 @@ public class ItemBoxScreen extends Screen {
     private record PvLayout(int gx, int gy, int gw, int gh, int rows, int tx, int ty) {}
 
     private PvLayout pvLayout() {
-        int n    = ItemPool.getPool().size();
+        int n    = activePool().size();
         int rows = Math.max(3, (n + PV_COLS - 1) / PV_COLS);
         int gw   = PV_COLS * PV_SLOT + (PV_COLS - 1) * PV_GAP + PV_BORDER * 2 + 4;
         int gh   = rows * PV_SLOT + (rows - 1) * PV_GAP + PV_BORDER * 2 + 4;
@@ -718,7 +720,7 @@ public class ItemBoxScreen extends Screen {
         drawOpenBubble(g, l);
 
         if (hovered != null) {
-            int total = Math.max(1, ItemPool.getPool().stream().mapToInt(ItemPool.PoolEntry::weight).sum());
+            int total = Math.max(1, activePool().stream().mapToInt(ItemPool.PoolEntry::weight).sum());
             List<Component> lines = List.of(
                 Component.literal((hovered.quantity() > 1 ? hovered.quantity() + "× " : "") + getItemName(hovered.itemId())),
                 Component.literal(hovered.rarity().label).withColor(hovered.rarity().color),
@@ -783,9 +785,25 @@ public class ItemBoxScreen extends Screen {
         return false;
     }
 
+    private boolean isCreateChest() {
+        return "create_bronze".equals(chestType) || "create_gold".equals(chestType);
+    }
+
+    private List<ItemPool.PoolEntry> activePool() {
+        return isCreateChest() ? CreatePool.getPool() : ItemPool.getPool();
+    }
+
+    private List<String> activeDecoys(String excludedId, int count) {
+        return isCreateChest() ? CreatePool.decoys(excludedId, count) : ItemPool.decoys(excludedId, count);
+    }
+
+    private Optional<ItemPool.PoolEntry> activeFindEntry(String itemId) {
+        return isCreateChest() ? CreatePool.findEntry(itemId) : ItemPool.findEntry(itemId);
+    }
+
     /** Pool trié du plus rare au plus commun pour la grille. */
     private List<ItemPool.PoolEntry> sortedPool() {
-        List<ItemPool.PoolEntry> list = new ArrayList<>(ItemPool.getPool());
+        List<ItemPool.PoolEntry> list = new ArrayList<>(activePool());
         list.sort((a, b) -> b.rarity().ordinal() - a.rarity().ordinal());
         return list;
     }
@@ -840,6 +858,21 @@ public class ItemBoxScreen extends Screen {
 
     @Override public boolean isPauseScreen() { return false; }
 
+    private String getScreenTitle() {
+        return switch (chestType) {
+            case "create_bronze" -> "CAISSE CREATE BRONZE";
+            case "create_gold"   -> "CAISSE CREATE GOLD";
+            default              -> "CAISSE POKÉ BALL";
+        };
+    }
+
+    private String getScreenSubtitle() {
+        return switch (chestType) {
+            case "create_bronze", "create_gold" -> "Create Items";
+            default                             -> "Cobblemon Items";
+        };
+    }
+
     // ── Utilitaires ───────────────────────────────────────────────────
 
     private boolean isHov(int bx, int by, int bw, int bh) {
@@ -847,27 +880,32 @@ public class ItemBoxScreen extends Screen {
     }
 
     private int getQuantity(String itemId) {
-        return ItemPool.findEntry(itemId).map(ItemPool.PoolEntry::quantity).orElse(1);
+        return activeFindEntry(itemId).map(ItemPool.PoolEntry::quantity).orElse(1);
     }
 
     private String getItemName(String itemId) {
         try {
             var loc = ResourceLocation.parse(itemId);
-            var item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(loc);
-            if (item != null) return item.getDescription().getString();
+            var opt = net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(loc);
+            if (opt.isPresent() && opt.get() != net.minecraft.world.item.Items.AIR)
+                return opt.get().getDescription().getString();
         } catch (Throwable ignored) {}
-        // Fallback: last segment, capitalize
-        String raw = itemId.contains(":") ? itemId.substring(itemId.indexOf(':') + 1) : itemId;
-        return raw.replace('_', ' ');
+        // Fallback: use translation key so lang files are respected
+        if (itemId.contains(":")) {
+            String ns   = itemId.substring(0, itemId.indexOf(':'));
+            String path = itemId.substring(itemId.indexOf(':') + 1);
+            return net.minecraft.network.chat.Component.translatable("item." + ns + "." + path).getString();
+        }
+        return itemId.replace('_', ' ');
     }
 
     private ItemStack getItemStack(String itemId) {
         return spriteCache.computeIfAbsent(itemId, id -> {
             try {
                 var loc = ResourceLocation.parse(id);
-                var item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(loc);
-                if (item == null) return ItemStack.EMPTY;
-                return new ItemStack(item);
+                var opt = net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(loc);
+                if (opt.isEmpty() || opt.get() == net.minecraft.world.item.Items.AIR) return ItemStack.EMPTY;
+                return new ItemStack(opt.get());
             } catch (Throwable ignored) { return ItemStack.EMPTY; }
         });
     }
@@ -875,7 +913,12 @@ public class ItemBoxScreen extends Screen {
     private ItemStack getKeySprite() {
         if (keySprite == null) {
             try {
-                var item = fr.creatmon.shop.ModItems.POKE_BALL_KEY.get();
+                var item = switch (chestType) {
+                    case "master_ball"   -> fr.creatmon.shop.ModItems.MASTER_BALL_KEY.get();
+                    case "create_bronze" -> fr.creatmon.shop.ModItems.CREATE_BRONZE_KEY.get();
+                    case "create_gold"   -> fr.creatmon.shop.ModItems.CREATE_GOLD_KEY.get();
+                    default              -> fr.creatmon.shop.ModItems.POKE_BALL_KEY.get();
+                };
                 keySprite = new ItemStack(item);
             } catch (Throwable ignored) { keySprite = ItemStack.EMPTY; }
         }

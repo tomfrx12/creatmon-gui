@@ -35,6 +35,12 @@ public class ModItems {
     public static final DeferredHolder<Item, KeyItem> MASTER_BALL_KEY =
             ITEMS.register("chest_master_ball_key", KeyItem::new);
 
+    public static final DeferredHolder<Item, KeyItem> CREATE_BRONZE_KEY =
+            ITEMS.register("chest_create_bronze_key", KeyItem::new);
+
+    public static final DeferredHolder<Item, KeyItem> CREATE_GOLD_KEY =
+            ITEMS.register("chest_create_gold_key", KeyItem::new);
+
     static void register(IEventBus bus) {
         ITEMS.register(bus);
     }

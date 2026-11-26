@@ -1,5 +1,6 @@
 package fr.creatmon.shop;
 
+import fr.creatmon.shop.lootbox.CreatePool;
 import fr.creatmon.shop.lootbox.ItemPool;
 import fr.creatmon.shop.lootbox.LootBoxConfig;
 import net.neoforged.bus.api.IEventBus;
@@ -23,5 +24,6 @@ public class CreatmonShop {
         ShopData.load();
         LootBoxConfig.load();
         ItemPool.load();
+        CreatePool.load();
     }
 }

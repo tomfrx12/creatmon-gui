@@ -1,0 +1,15 @@
+{
+  "item.creatmon_gui.chest_poke_ball":       "Poké Ball Chest",
+  "item.creatmon_gui.chest_master_ball":     "Master Ball Chest",
+  "item.creatmon_gui.chest_create_bronze":   "Bronze Create Chest",
+  "item.creatmon_gui.chest_create_gold":     "Gold Create Chest",
+  "item.creatmon_gui.chest_poke_ball_key":    "Poké Ball Key",
+  "item.creatmon_gui.chest_master_ball_key":  "Master Ball Key",
+  "item.creatmon_gui.chest_create_bronze_key": "Create Bronze Key",
+  "item.creatmon_gui.chest_create_gold_key":   "Create Gold Key",
+
+  "block.creatmon_gui.chest_poke_ball":      "Poké Ball Chest",
+  "block.creatmon_gui.chest_master_ball":    "Master Ball Chest",
+  "block.creatmon_gui.chest_create_bronze":  "Bronze Create Chest",
+  "block.creatmon_gui.chest_create_gold":    "Gold Create Chest"
+}
