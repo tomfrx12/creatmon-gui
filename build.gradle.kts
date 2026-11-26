@@ -35,13 +35,14 @@ runs {
 
 repositories {
     mavenCentral()
+    maven("https://api.modrinth.com/maven") { content { includeGroup("maven.modrinth") } }
 }
 
 dependencies {
     implementation("net.neoforged:neoforge:${neo_version}")
     // Cobblemon - compile-only (présent dans le modpack au runtime)
-    compileOnly(files("/mnt/c/Users/natto/curseforge/minecraft/Instances/create x neoforge/mods/Cobblemon-neoforge-1.8.4+1.21.1.jar"))
-compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
+    compileOnly("maven.modrinth:cobblemon:1.8.4NF")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
 }
 
 tasks.withType<ProcessResources>().configureEach {
