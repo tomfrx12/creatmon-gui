@@ -34,6 +34,9 @@ public class ModPackets {
         registrar.playToClient(ItemBoxResultPacket.TYPE,  ItemBoxResultPacket.CODEC,  ItemBoxResultPacket::handle);
         // Menu joueur
         registrar.playToClient(MenuSyncPacket.TYPE, MenuSyncPacket.CODEC, MenuSyncPacket::handle);
+        // Tableau des valeurs d XP
+        registrar.playToServer(XpTableRequestPacket.TYPE, XpTableRequestPacket.CODEC, XpTableRequestPacket::handle);
+        registrar.playToClient(XpTablePacket.TYPE,        XpTablePacket.CODEC,        XpTablePacket::handle);
         // Pass de progression
         registrar.playToClient(PassSyncPacket.TYPE,  PassSyncPacket.CODEC,  PassSyncPacket::handle);
         registrar.playToServer(PassClaimPacket.TYPE, PassClaimPacket.CODEC, PassClaimPacket::handle);
