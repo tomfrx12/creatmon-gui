@@ -42,6 +42,7 @@ dependencies {
     implementation("net.neoforged:neoforge:${neo_version}")
     // Cobblemon - compile-only (présent dans le modpack au runtime)
     compileOnly("maven.modrinth:cobblemon:1.8.4NF")
+    compileOnly("maven.modrinth:create:6.0.10+mc1.21.1")
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
 }
 

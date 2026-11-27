@@ -21,3 +21,6 @@ license = "MIT"
     versionRange = "${minecraft_version_range}"
     ordering = "NONE"
     side = "BOTH"
+# XP du pass pour les machines Create (ignoré si Create est absent)
+[[mixins]]
+    config = "creatmon_gui.mixins.json"

@@ -1,0 +1,18 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "fr.creatmon.shop.mixin.create",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BasinOperatingMixin",
+    "BeltDeployerMixin",
+    "CrushingWheelMixin",
+    "MechanicalCrafterMixin",
+    "MechanicalPressMixin",
+    "MillstoneMixin",
+    "SawMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}
