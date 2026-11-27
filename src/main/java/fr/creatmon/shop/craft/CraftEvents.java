@@ -91,6 +91,7 @@ public class CraftEvents {
                         "§b[Atelier Create] §fObjectif rempli: §e" + shortId +
                         " §7→ §a+" + reward + " €"));
                     fr.creatmon.shop.network.BalanceUtils.sendSync(player);
+                    fr.creatmon.shop.pass.PassXp.onAtelierObjective(player, target.difficulty().name());
                     anyNew = true;
                 }
             }

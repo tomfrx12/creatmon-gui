@@ -97,6 +97,9 @@ public class ChaseEvents {
                 "§6[Tableau de chasse] §fObjectif complété: §e" +
                 capitalize(species) + " §7→ §a+" + reward + " €"));
             fr.creatmon.shop.network.BalanceUtils.sendSync(player);
+            ChaseData.currentTargets.stream()
+                .filter(t -> t.speciesName().equalsIgnoreCase(species)).findFirst()
+                .ifPresent(t -> fr.creatmon.shop.pass.PassXp.onChaseObjective(player, t.rarity().name()));
             sendSync(player);
         }
     }

@@ -32,6 +32,9 @@ public class ModPackets {
         registrar.playToClient(LootBoxOpenPacket.TYPE,    LootBoxOpenPacket.CODEC,    LootBoxOpenPacket::handle);
         registrar.playToClient(LootBoxResultPacket.TYPE,  LootBoxResultPacket.CODEC,  LootBoxResultPacket::handle);
         registrar.playToClient(ItemBoxResultPacket.TYPE,  ItemBoxResultPacket.CODEC,  ItemBoxResultPacket::handle);
+        // Pass de progression
+        registrar.playToClient(PassSyncPacket.TYPE,  PassSyncPacket.CODEC,  PassSyncPacket::handle);
+        registrar.playToServer(PassClaimPacket.TYPE, PassClaimPacket.CODEC, PassClaimPacket::handle);
         // LootBox — client → server
         registrar.playToServer(LootBoxClaimPacket.TYPE,   LootBoxClaimPacket.CODEC,   LootBoxClaimPacket::handle);
     }
